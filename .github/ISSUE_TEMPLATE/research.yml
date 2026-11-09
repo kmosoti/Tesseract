@@ -1,0 +1,19 @@
+name: Research comparison
+description: Register a falsifiable experiment before implementing a candidate
+body:
+  - type: textarea
+    id: hypothesis
+    attributes:
+      label: Hypothesis and public capability
+    validations:
+      required: true
+  - type: textarea
+    id: controls
+    attributes:
+      label: Controls, budgets, untouched evaluation data, and rejection criteria
+    validations:
+      required: true
+  - type: textarea
+    id: knowledge
+    attributes:
+      label: Linked knowledge, implementation boundaries, and compatibility

@@ -1,0 +1,26 @@
+[package]
+name = "tesseract-lab"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "tesseract"
+path = "src/main.rs"
+
+[dependencies]
+tesseract-contracts.workspace = true
+tesseract-kernel.workspace = true
+tesseract-journal.workspace = true
+tesseract-workshop.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+rand.workspace = true
+rand_chacha.workspace = true
+clap.workspace = true
+tempfile.workspace = true
+sha2.workspace = true
+rlimit = "0.10"
+
+[lints]
+workspace = true

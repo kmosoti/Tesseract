@@ -1,9 +1,55 @@
 # Tesseract
 
-A CPU-first Rust laboratory for persistent developmental learning. Quantum-inspired
-representations are experimental candidates, evaluated against classical models.
+A CPU-first Rust laboratory for persistent developmental learning. Experience
+updates working symbolic records; validated learning acquires durable transition
+operators and bounded action programs. Bayesian, real-valued, and complex-valued
+representations share public cognitive contracts.
 
-This repository is being bootstrapped. No learning or quantum advantage has yet
-been demonstrated. Implementation and evidence will arrive through `develop`.
+**Status:** kernel v0.1 is implemented locally. The frozen evaluation verdict will
+be recorded separately. No general-intelligence, unrestricted concept-invention,
+or quantum-superiority claim follows from the architecture.
 
-Licensed under MIT. Copyright 2026 Kennedy Mosoti.
+## Run
+
+Install Rust with rustup; the repository pins Rust 1.99.1. Build and run from a
+Git checkout. Python 3 is needed only for knowledge checks and repository setup.
+
+```bash
+cargo test --locked --workspace
+cargo build --locked --release --workspace
+mkdir -p runs
+cargo run --locked --release -p tesseract-lab -- demo --journal runs/demo.jsonl
+cargo run --locked --release -p tesseract-lab -- replay runs/demo.jsonl --checkpoint runs/demo.checkpoint.json
+cargo run --locked --release -p tesseract-lab -- compare --tier smoke --workers 2 --out runs/smoke.json
+```
+
+Journal and evidence paths are exclusive; choose a new path for a new run. Use
+`--kind real` or `--kind complex` with `demo` to exercise the matrix candidates.
+The coordinator runs isolated workers, capped at four. Each Linux process is
+limited to 1 GiB virtual address space. No GPU, model download, LLM, or network
+service is required at runtime.
+
+## What this tests
+
+The workshop has noisy public observations and hidden, seeded material rules.
+Learned processes must predict unseen action triples on new objects and survive
+actual journal reopen. Automatic validation keeps held-out objects separate from
+training, checks retained competence, and rejects stale or invalid candidates.
+Learned macros prioritize tightly bounded proposal search; a disabled-library
+ablation tests that contribution separately.
+
+Complex mathematics is a candidate substrate. Classical order effects and useful
+learning do not establish quantum advantage. Matrix candidates start from an
+empirical classical embedding and have different coordinate/storage costs.
+
+- [Architecture and precise limitations](docs/architecture.md)
+- [Protocol, controls, metrics, and gates](docs/methodology.md)
+- [Developmental roadmap](docs/roadmap.md)
+- [Linked knowledge graph](knowledge/README.md)
+- [Contributor workflow](CONTRIBUTING.md) and [agent agreement](AGENTS.md)
+- [Publication status and administrative blocker](docs/publication.md)
+
+Project knowledge is revisable Markdown with linked D-/R-/O- records. Runtime
+memory is a separate versioned event journal with provenance and rollback.
+
+MIT License. Copyright 2026 Kennedy Mosoti.

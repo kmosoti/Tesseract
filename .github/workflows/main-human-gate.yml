@@ -1,0 +1,15 @@
+name: Main Branch Human Gate
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+permissions:
+  contents: read
+jobs:
+  main-human-approval:
+    name: main-human-approval
+    runs-on: ubuntu-latest
+    environment: main-release
+    steps:
+      - name: Record manually approved release checkpoint
+        run: echo 'The configured main-release environment gate was approved by its human reviewer.'

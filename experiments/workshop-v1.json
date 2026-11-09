@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "noise": 0.05,
+  "fit_evaluations": 192,
+  "max_processes": 64,
+  "bootstrap_resamples": 10000,
+  "minimum_relative_gain": 0.05,
+  "maximum_cost_ratio": 2.0
+}
