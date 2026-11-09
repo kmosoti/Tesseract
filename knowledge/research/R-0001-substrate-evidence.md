@@ -54,6 +54,7 @@ expansion preserves state geometry but does not create a meaningful distinction.
 
 - *informs*: [D-0001](../decisions/D-0001-developmental-kernel.md)
 - *tested-by*: [D-0003](../decisions/D-0003-workshop-protocol.md)
+- *challenged-by*: [O-0003](../observations/O-0003-workshop-verdict.md)
 
 ## Revisit when
 

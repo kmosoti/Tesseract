@@ -5,9 +5,12 @@ updates working symbolic records; validated learning acquires durable transition
 operators and bounded action programs. Bayesian, real-valued, and complex-valued
 representations share public cognitive contracts.
 
-**Status:** kernel v0.1 is implemented locally. The frozen evaluation verdict will
-be recorded separately. No general-intelligence, unrestricted concept-invention,
-or quantum-superiority claim follows from the architecture.
+**Status:** kernel v0.1 is implemented and independently reviewed locally. The
+frozen 100-seed comparison supports persistent transition learning and bounded
+macro reuse; complex channels did not outperform the real-valued candidate.
+See [the measured verdict](docs/findings.md). Public repository creation remains
+blocked by GitHub integration permissions. No general-intelligence or unrestricted
+concept-invention claim follows from these results.
 
 ## Run
 
@@ -45,6 +48,7 @@ empirical classical embedding and have different coordinate/storage costs.
 - [Architecture and precise limitations](docs/architecture.md)
 - [Protocol, controls, metrics, and gates](docs/methodology.md)
 - [Developmental roadmap](docs/roadmap.md)
+- [Frozen results and reproduction](evidence/workshop-v1/README.md)
 - [Linked knowledge graph](knowledge/README.md)
 - [Contributor workflow](CONTRIBUTING.md) and [agent agreement](AGENTS.md)
 - [Publication status and administrative blocker](docs/publication.md)

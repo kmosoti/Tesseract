@@ -18,6 +18,7 @@ and `ratified_on`. Do not silently overturn a ratified decision.
 | [R-0001](research/R-0001-substrate-evidence.md) | Research | false | Evidence, alternatives, and unanswered questions |
 | [O-0001](observations/O-0001-bootstrap.md) | Observation | false | Starting environment and publication blocker |
 | [O-0002](observations/O-0002-freeze-verification.md) | Observation | false | Independent qualification before frozen evaluation |
+| [O-0003](observations/O-0003-workshop-verdict.md) | Observation | false | Supported transfer/macro learning; negative complex-substrate result |
 
 Each record distinguishes Observed, Inferred, Hypothesis, and Unknown; includes
 typed relative links in Relations; and states Revisit when. Keep useful backlinks.

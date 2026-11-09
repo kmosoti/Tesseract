@@ -39,6 +39,7 @@ that the v0.1 kernel autonomously invents meanings or general intelligence.
 - *tested-by*: [D-0003](D-0003-workshop-protocol.md)
 - *observed-in*: [O-0001](../observations/O-0001-bootstrap.md)
 - *implemented-under*: [D-0002](D-0002-working-agreement.md)
+- *observed-in*: [O-0003](../observations/O-0003-workshop-verdict.md)
 
 ## Revisit when
 

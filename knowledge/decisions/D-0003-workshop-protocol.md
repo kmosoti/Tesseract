@@ -40,6 +40,7 @@ negative substrate result. Coordinate counts are not matched intrinsic capacity.
 - *informed-by*: [R-0001](../research/R-0001-substrate-evidence.md)
 - *implemented-under*: [D-0002](D-0002-working-agreement.md)
 - *qualified-by*: [O-0002](../observations/O-0002-freeze-verification.md)
+- *observed-in*: [O-0003](../observations/O-0003-workshop-verdict.md)
 
 ## Revisit when
 
