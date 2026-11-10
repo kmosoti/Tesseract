@@ -1,0 +1,6 @@
+{
+ "version":1,
+ "objective":"Source-grounded symbolic interpretation with translation isolated from reasoning",
+ "acceptance":["question compilation has no memory input and preserves polarity and qualifiers","source interpretation emits typed atoms with exact source witnesses, counts rejected clauses","answer renderer receives only an engine result","queries never output source paragraphs by default","unknown and contradictory evidence are distinct","an engine inference depends on acquired closure and explicit hypothetical premises","source substitutions, deletions and novel vocabulary change interpretation","persisted interpretation identity and digest survive reopen; incompatible graphs are rejected"],
+ "questions":["What is quantum decoherence?","Can entanglement be used for faster-than-light communication?","Can entanglement alone be used to transmit information?","What is quantum superposition?","Under quantum superposition, if a and b are solutions of the Schrödinger equation, is their linear combination also a solution?","Why does consciousness cause collapse?"]
+}

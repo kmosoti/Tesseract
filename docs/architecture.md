@@ -112,9 +112,14 @@ bounded abstraction over known predicates, not arbitrary ontology invention.
 
 The [scientific reader](scientific-reading.md) accepts a separately imported
 corpus, preserves revision provenance and source MathML, and builds a deterministic
-lexical index. SI `recall` terms evaluate against this reading memory, returning
-excerpts and their evidence references. Read-only questioning cannot install
+lexical index and a separately versioned interpretation. SI `reason` terms contain
+typed queries; a pure English adapter compiles syntax, the symbolic engine owns
+claim matching and deductions, and a result-only renderer displays proofs.
+Classification, signed relations, scope, attributed closure and source witnesses
+are explicit. `recall` remains a separate excerpt-inspection interface.
+Read-only questioning cannot install
 validated competence or alter workshop predictions. This boundary prevents
 imported prose from becoming a sealed numerical learning result. Corpus reading
-is persistent knowledge acquisition; retrieval alone does not establish semantic
-entailment, truth, or general scientific reasoning.
+is persistent knowledge acquisition. Its narrow source grammar and one generic
+closure rule do not establish correct interpretation of arbitrary English,
+scientific truth, or general reasoning competence.

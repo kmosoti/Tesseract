@@ -52,3 +52,14 @@ theorem working_support_has_no_counterexamples (s c : Nat) (cross : Bool)
   cases c with
   | zero => rfl
   | succ n => simp [classify] at h
+
+-- A source assertion of closure is a premise, not a proof of the source's truth.
+-- This theorem checks the generic inference schema used by the symbolic engine.
+def ClosedUnder {S : Type} (member : S → Prop) (combine : S → S → S) : Prop :=
+  ∀ a b, member a → member b → member (combine a b)
+
+theorem conditional_linear_closure {S : Type} (member : S → Prop)
+    (combine : S → S → S) (a b : S)
+    (sourceClosure : ClosedUnder member combine)
+    (assumptionA : member a) (assumptionB : member b) : member (combine a b) :=
+  sourceClosure a b assumptionA assumptionB

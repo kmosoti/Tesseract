@@ -1,5 +1,6 @@
 //! Persistent, source-attributed declarative reading memory.
 //! Retrieval returns evidence, never an entailment or scientific-truth certificate.
+pub mod symbolic;
 use serde::{Deserialize, Serialize};
 use std::{
     collections::{BTreeMap, BTreeSet},
@@ -171,6 +172,10 @@ struct Snapshot {
     schema: u32,
     corpus_digest: String,
     corpus: Corpus,
+    #[serde(default)]
+    interpretation: Option<serde_json::Value>,
+    #[serde(default)]
+    interpretation_digest: Option<String>,
 }
 #[derive(Debug, Clone)]
 struct IndexedPassage {
@@ -186,6 +191,7 @@ pub struct KnowledgeBase {
     index: Vec<IndexedPassage>,
     frequencies: BTreeMap<String, usize>,
     average_length: f64,
+    interpretation: Option<symbolic::Interpretation>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct ReadingStats {
@@ -263,6 +269,11 @@ impl Answer {
 impl KnowledgeBase {
     pub fn read(corpus: Corpus) -> Result<Self> {
         corpus.validate()?;
+        let interpretation = Some(symbolic::Interpretation::derive(&corpus)?);
+        Self::index(corpus, interpretation)
+    }
+    fn index(corpus: Corpus, interpretation: Option<symbolic::Interpretation>) -> Result<Self> {
+        corpus.validate()?;
         let corpus_digest = digest(&corpus)?;
         let mut index = Vec::new();
         let mut frequencies = BTreeMap::new();
@@ -292,6 +303,7 @@ impl KnowledgeBase {
             index,
             frequencies,
             average_length,
+            interpretation,
         })
     }
     pub fn stats(&self) -> ReadingStats {
@@ -306,6 +318,14 @@ impl KnowledgeBase {
     pub fn corpus(&self) -> &Corpus {
         &self.corpus
     }
+    pub fn interpretation(&self) -> Result<&symbolic::Interpretation> {
+        self.interpretation.as_ref().ok_or_else(|| {
+            Error::Invalid(
+                "legacy memory has no symbolic interpretation; read its corpus into a new memory"
+                    .into(),
+            )
+        })
+    }
     /// Exclusive atomic publication; existing memories are never replaced.
     pub fn save(&self, path: &Path) -> Result<()> {
         let parent = path
@@ -313,14 +333,25 @@ impl KnowledgeBase {
             .filter(|p| !p.as_os_str().is_empty())
             .unwrap_or(Path::new("."));
         let mut file = tempfile::NamedTempFile::new_in(parent)?;
-        serde_json::to_writer(
-            file.as_file_mut(),
-            &Snapshot {
-                schema: 1,
-                corpus_digest: self.digest.clone(),
-                corpus: self.corpus.clone(),
-            },
-        )?;
+        let bytes = serde_json::to_vec(&Snapshot {
+            schema: if self.interpretation.is_some() { 2 } else { 1 },
+            corpus_digest: self.digest.clone(),
+            corpus: self.corpus.clone(),
+            interpretation: self
+                .interpretation
+                .as_ref()
+                .map(serde_json::to_value)
+                .transpose()?,
+            interpretation_digest: self
+                .interpretation
+                .as_ref()
+                .map(symbolic::Interpretation::digest)
+                .transpose()?,
+        })?;
+        if bytes.len() as u64 > MAX_BYTES {
+            return Err(Error::Budget("reading snapshot exceeds 16 MiB".into()));
+        }
+        file.as_file_mut().write_all(&bytes)?;
         file.as_file_mut().flush()?;
         file.as_file().sync_all()?;
         file.persist_noclobber(path)
@@ -330,13 +361,40 @@ impl KnowledgeBase {
     }
     pub fn open(path: &Path) -> Result<Self> {
         let snapshot: Snapshot = serde_json::from_slice(&read_bounded(path, MAX_BYTES)?)?;
-        if snapshot.schema != 1
+        if ![1, 2].contains(&snapshot.schema)
             || !is_hash(&snapshot.corpus_digest)
             || digest(&snapshot.corpus)? != snapshot.corpus_digest
         {
             return Err(Error::Corrupt("reading snapshot digest mismatch".into()));
         }
-        Self::read(snapshot.corpus)
+        snapshot.corpus.validate()?;
+        let interpretation = if snapshot.schema == 2 {
+            let stored = snapshot
+                .interpretation
+                .ok_or_else(|| Error::Corrupt("missing symbolic interpretation".into()))?;
+            if stored["extractor"] != symbolic::EXTRACTOR {
+                return Err(Error::Invalid(
+                    "unsupported extractor version; reinterpret corpus explicitly".into(),
+                ));
+            }
+            let graph = symbolic::Interpretation::derive(&snapshot.corpus)?;
+            if snapshot.interpretation_digest.as_deref() != Some(graph.digest()?.as_str())
+                || stored != serde_json::to_value(&graph)?
+            {
+                return Err(Error::Corrupt(
+                    "stored interpretation differs from its source-bound derivation".into(),
+                ));
+            }
+            Some(graph)
+        } else {
+            if snapshot.interpretation.is_some() || snapshot.interpretation_digest.is_some() {
+                return Err(Error::Corrupt(
+                    "legacy schema cannot contain an interpretation".into(),
+                ));
+            }
+            None
+        };
+        Self::index(snapshot.corpus, interpretation)
     }
     pub fn ask(&self, question: &str) -> Result<Answer> {
         validate_question(question)?;
