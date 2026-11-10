@@ -161,3 +161,27 @@ fn supplied_corpus_definitions_and_no_communication_evidence_are_retrievable() {
             .contains("cannot be used for faster-than-light communication")
     }));
 }
+
+#[test]
+fn vocabulary_scattered_across_unrelated_passages_is_not_answer_evidence() {
+    let mut source =
+        corpus("Apples appear in this independent source fixture for one unrelated topic.");
+    for text in [
+        "Planets appear in this independent source fixture for another unrelated topic.",
+        "Minerals appear in this independent source fixture for a separate unrelated topic.",
+        "Vehicles appear in this independent source fixture for a fourth unrelated topic.",
+    ] {
+        source.articles[0].passages.push(Passage {
+            section: "Fixture".into(),
+            text: text.into(),
+            equations: vec![],
+        });
+    }
+    let memory = KnowledgeBase::read(source).unwrap();
+    let answer = memory
+        .ask("What about apples planets minerals vehicles?")
+        .unwrap();
+    assert_eq!(answer.matched_term_fraction, 1.0);
+    assert_eq!(answer.status, AnswerStatus::InsufficientEvidence);
+    assert!(answer.evidence.is_empty());
+}

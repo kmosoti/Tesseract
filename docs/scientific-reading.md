@@ -39,7 +39,8 @@ Workshop SI commands and journals keep their existing interfaces.
 The reader normalizes words, applies a small synonym vocabulary, and ranks
 passages using lexical relevance and article-title priors. It returns at most
 three excerpts and reports insufficient evidence when too few question terms
-occur in the corpus. Relevance scores are neither probabilities nor scientific
+occur in the corpus or in individual candidate passages. Every returned passage
+must match at least half the question's content terms. Relevance scores are neither probabilities nor scientific
 confidence. Unsupported premises can still retrieve related text: asking whether
 consciousness proves collapse does not make that claim established.
 

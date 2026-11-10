@@ -1,0 +1,29 @@
+{
+  "questions": [
+    "What is quantum mechanics?",
+    "What is quantum superposition?",
+    "How does measurement affect a quantum state?",
+    "What does the uncertainty principle say about position and momentum?",
+    "Can quantum entanglement send messages faster than light?",
+    "How does quantum tunnelling work?",
+    "What is the Born rule?",
+    "What is the difference between superposition and entanglement?",
+    "What is quantum decoherence?",
+    "What does the Schrodinger equation describe?",
+    "Does quantum mechanics prove that consciousness causes collapse?",
+    "What is the best recipe for banana bread?",
+    "What is a quantum banana recipe?",
+    "Why can a particle cross a barrier that classical physics forbids?",
+    "Why can't we know an electron's exact position and momentum together?",
+    "Does observing one entangled particle allow instantaneous communication?",
+    "Which interpretation of quantum mechanics has been conclusively proved correct?",
+    "How much will my electricity bill cost next month?"
+  ],
+  "held_out_questions": [
+    "What observations in Stern-Gerlach experiments indicate that electron spin is quantized?",
+    "Why do spin measurements along different axes challenge local hidden-variable explanations of entanglement?",
+    "What happens to the double-slit interference pattern when which-path detectors are used?",
+    "What is quantum Darwinism proposed to explain about the emergence of classical behavior?",
+    "What is the capital of Portugal?"
+  ]
+}
