@@ -23,6 +23,8 @@ and `ratified_on`. Do not silently overturn a ratified decision.
 | [O-0005](observations/O-0005-symbolic-loop.md) | Observation | false | Complex symbolic feedback loop and language exploration |
 | [O-0006](observations/O-0006-si-execution.md) | Observation | false | Executable SI, formal checks, and Rust tooling |
 | [O-0007](observations/O-0007-english-adapter.md) | Observation | false | Bidirectional English adapter and bounded round trips |
+| [O-0008](observations/O-0008-gpu-probe.md) | Observation | false | Optional Burn GPU batch and cache comparison |
+| [O-0009](observations/O-0009-working-nucleus.md) | Observation | false | Working abstractions and disagreement-driven experiments |
 
 Each record distinguishes Observed, Inferred, Hypothesis, and Unknown; includes
 typed relative links in Relations; and states Revisit when. Keep useful backlinks.

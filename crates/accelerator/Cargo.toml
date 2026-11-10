@@ -1,0 +1,21 @@
+[package]
+name = "tesseract-accelerator"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+[features]
+default = []
+wgpu = ["dep:burn", "dep:tesseract-journal"]
+[dependencies]
+burn = { version = "=0.22.1", default-features = false, features = ["std", "wgpu"], optional = true }
+tesseract-contracts.workspace = true
+tesseract-kernel.workspace = true
+tesseract-journal = { workspace = true, optional = true }
+serde_json.workspace = true
+num-complex.workspace = true
+[[bin]]
+name = "tesseract-gpu-probe"
+path = "src/main.rs"
+required-features = ["wgpu"]
+[lints]
+workspace = true

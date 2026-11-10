@@ -45,6 +45,8 @@ pub fn from_english(source: &str) -> Result<Term> {
         .replace("non-porous", "nonporous");
     let words: Vec<_> = normalized.split_whitespace().collect();
     let symbolic = match words.as_slice() {
+        ["what", "concepts", "have", "you", "formed"] => "concepts".into(),
+        ["what", "should", "you", "investigate", "next"] => "wonder".into(),
         [
             "predict",
             "the",
@@ -133,6 +135,8 @@ impl Term {
             query.validate()?;
         }
         let source = match self {
+            Self::Concepts => "concepts".into(),
+            Self::Wonder => "wonder".into(),
             Self::Predict(query) => format!(
                 "predict {} {} {}",
                 if query.features.porous {
@@ -165,6 +169,8 @@ impl Term {
     pub fn to_english(&self) -> Result<String> {
         self.to_source()?;
         Ok(match self {
+            Self::Concepts => "What concepts have you formed?".into(),
+            Self::Wonder => "What should you investigate next?".into(),
             Self::Predict(query) => format!(
                 "Predict the outcome for a {} object starting in state {} after {}.",
                 if query.features.porous {
@@ -203,6 +209,60 @@ impl Thought {
         }
         let request = self.term.to_english()?;
         let result = match (&self.term, &self.value) {
+            (Term::Concepts, Value::Concepts(concepts)) => {
+                if concepts.len() > 16 {
+                    return Err(Error::Budget("too many displayed concepts".into()));
+                }
+                let mut lines = Vec::new();
+                for concept in concepts {
+                    concept.validate()?;
+                    let feature = match concept.pattern.porous {
+                        Some(true) => "porous",
+                        Some(false) => "nonporous",
+                        None => "either porous or nonporous",
+                    };
+                    let initial = concept.pattern.initial.map_or_else(
+                        || "any initial state".into(),
+                        |i| format!("initial state {i}"),
+                    );
+                    let status = match concept.status {
+                        tesseract_nucleus::ConceptStatus::Candidate => "candidate",
+                        tesseract_nucleus::ConceptStatus::SupportedWorking => {
+                            "supported working hypothesis"
+                        }
+                        tesseract_nucleus::ConceptStatus::Contested => "contested",
+                    };
+                    lines.push(format!("{}: For an object that is {feature}, at {initial}, {} predicts state {}. Support: {} objects; counterexamples: {} objects; {status}.", &concept.id[..12],concept.pattern.actions.iter().map(|a|action_name(*a)).collect::<Vec<_>>().join(" then "),concept.outcome,concept.support_objects,concept.counterexample_objects));
+                }
+                if lines.is_empty() {
+                    "No working concepts yet; observations are needed.".into()
+                } else {
+                    format!(
+                        "Working hypotheses, not validated laws:\n{}",
+                        lines.join("\n")
+                    )
+                }
+            }
+            (Term::Wonder, Value::Curiosity(choice)) => {
+                choice.validate()?;
+                if choice.evidence_head != self.evidence_head || choice.revision != self.revision {
+                    return Err(Error::Invalid("curiosity source mismatch".into()));
+                }
+                let reason = match choice.reason {
+                    tesseract_nucleus::CuriosityReason::CommitteeDisagreement => {
+                        "competing predictions disagree"
+                    }
+                    tesseract_nucleus::CuriosityReason::CoverageFallback => {
+                        "coverage fallback because no disagreement was detected"
+                    }
+                };
+                format!(
+                    "Suggested experiment: {}\nWeighted predictive disagreement: {:.6e} nats; {reason}; searched {} of 312 queries. This proposes a test, not a verified outcome.",
+                    Term::Predict(choice.query.clone()).to_english()?,
+                    choice.disagreement,
+                    choice.evaluated
+                )
+            }
             (Term::Predict(_), Value::Prediction(prediction)) => {
                 let checked = tesseract_contracts::Prediction::new(
                     prediction.probabilities,

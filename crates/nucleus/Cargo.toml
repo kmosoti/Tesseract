@@ -1,0 +1,16 @@
+[package]
+name = "tesseract-nucleus"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+[dependencies]
+tesseract-contracts.workspace = true
+tesseract-kernel.workspace = true
+serde.workspace = true
+[lints]
+workspace = true
+[dev-dependencies]
+tesseract-journal.workspace = true
+tempfile.workspace = true
+serde_json.workspace = true
+tesseract-workshop.workspace = true

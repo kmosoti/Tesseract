@@ -195,3 +195,26 @@ fn saved_state_commands_preserve_journal_and_legacy_json() {
     assert_eq!(thought.revision, 0);
     assert_eq!(std::fs::read(path).unwrap(), before);
 }
+
+#[test]
+fn nucleus_operators_round_trip_and_preserve_read_only_source() {
+    let kernel = Kernel::new(Kind::Complex).unwrap();
+    let before = kernel.state_digest().unwrap();
+    for symbolic in ["concepts", "wonder"] {
+        let term = Term::parse(symbolic).unwrap();
+        assert_eq!(
+            from_english(&term.to_english().unwrap())
+                .unwrap()
+                .to_source()
+                .unwrap(),
+            symbolic
+        );
+        let mut thought = term.evaluate(&kernel, Budget::default()).unwrap();
+        thought.to_english().unwrap();
+        if let tesseract_si::Value::Curiosity(choice) = &mut thought.value {
+            choice.disagreement = -1.0;
+            assert!(thought.to_english().is_err());
+        }
+    }
+    assert_eq!(before, kernel.state_digest().unwrap());
+}

@@ -9,6 +9,7 @@ tesseract-kernel.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 tesseract-journal = { path = "../journal" }
+tesseract-nucleus = { path = "../nucleus" }
 [lints]
 workspace = true
 [dev-dependencies]

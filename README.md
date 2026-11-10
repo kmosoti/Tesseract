@@ -70,3 +70,7 @@ Project knowledge is revisable Markdown with linked D-/R-/O- records. Runtime
 memory is a separate versioned event journal with provenance and rollback.
 
 MIT License. Copyright 2026 Kennedy Mosoti.
+
+Experimental [working concepts and curiosity](docs/nucleus.md) provide a symbolic
+nucleus over public experience. The [optional Burn GPU probe](docs/gpu-probe.md)
+measures acceleration separately from the validated CPU runtime.

@@ -19,6 +19,16 @@ struct Cli {
 }
 #[derive(Subcommand)]
 enum Commands {
+    Explore {
+        #[arg(long)]
+        journal: PathBuf,
+        #[arg(long, default_value_t = 48)]
+        steps: usize,
+        #[arg(long, default_value_t = 114)]
+        seed: u64,
+        #[arg(long, default_value = "curiosity")]
+        policy: ExplorationPolicy,
+    },
     Compare {
         #[arg(long, default_value = "smoke")]
         tier: Tier,
@@ -49,6 +59,11 @@ enum Commands {
         #[arg(long)]
         protocol: PathBuf,
     },
+}
+#[derive(Clone, Copy, ValueEnum)]
+enum ExplorationPolicy {
+    Curiosity,
+    Coverage,
 }
 #[derive(Clone, Copy, ValueEnum)]
 enum Tier {
@@ -224,6 +239,97 @@ fn run() -> Result<()> {
             };
             write_exclusive(&out, &receipt)?;
             println!("{}", serde_json::to_string_pretty(&receipt.comparisons)?);
+        }
+        Commands::Explore {
+            journal,
+            steps,
+            seed,
+            policy,
+        } => {
+            if steps == 0 || steps > 512 {
+                return Err(Error::Budget("exploration steps must be 1..=512".into()));
+            }
+            let data = tesseract_workshop::dataset(seed, 0.0)?;
+            let mut world = tesseract_workshop::Workshop::new(seed, 0.0)?;
+            let mut session = Session::create(&journal, Kind::Complex)?;
+            let all: Vec<_> = [false, true]
+                .into_iter()
+                .flat_map(|porous| {
+                    (0..4).flat_map(move |initial| {
+                        tesseract_contracts::sequences()
+                            .into_iter()
+                            .map(move |actions| tesseract_contracts::Query {
+                                features: tesseract_contracts::Features { porous },
+                                initial,
+                                actions,
+                            })
+                    })
+                })
+                .collect();
+            let mut trace = Vec::new();
+            let mut promotions = Vec::new();
+            for step in 0..steps {
+                let choice = match policy {
+                    ExplorationPolicy::Curiosity => Some(
+                        tesseract_nucleus::Nucleus::from_kernel(session.kernel())?.wonder(312)?,
+                    ),
+                    ExplorationPolicy::Coverage => None,
+                };
+                let query = choice
+                    .as_ref()
+                    .map_or_else(|| all[step % all.len()].clone(), |c| c.query.clone());
+                let observed = world.interact(query.clone(), "nucleus-explore")?;
+                let receipt = session.observe(observed.clone())?;
+                trace.push(serde_json::json!({"step":step,"query":query,"choice":choice,"experience":observed,"evidence_id":receipt.evidence_id}));
+                if (step + 1) % 16 == 0 {
+                    let candidate = session.kernel().develop(
+                        tesseract_contracts::Budget {
+                            evaluations: 4,
+                            max_processes: 64,
+                        },
+                        seed.wrapping_add(step as u64),
+                    )?;
+                    match session.kernel().validate(
+                        candidate,
+                        &data.validation,
+                        ValidationPolicy::default(),
+                    ) {
+                        Ok(proof) => {
+                            let report = proof.report().clone();
+                            let revision = session.commit(proof)?;
+                            promotions.push(serde_json::json!({"revision":revision,"accepted":true,"validation":report}));
+                        }
+                        Err(Error::Rejected(reason))
+                            if reason.starts_with("gain ")
+                                || reason == "unrelated retained competence regressed"
+                                || reason
+                                    == "zero-loss parent cannot support a relative improvement claim" =>
+                        {
+                            promotions.push(serde_json::json!({"accepted":false,"reason":reason}))
+                        }
+                        Err(other) => return Err(other),
+                    }
+                }
+            }
+            let state = session.kernel().state_digest()?;
+            let nucleus = tesseract_nucleus::Nucleus::from_kernel(session.kernel())?;
+            let concepts = nucleus.concepts(16)?;
+            let next = nucleus.wonder(312)?;
+            drop(session);
+            let restored = Session::open(&journal)?;
+            let replay = tesseract_nucleus::Nucleus::from_kernel(restored.kernel())?;
+            let replay_matches = state == restored.kernel().state_digest()?
+                && digest(&next)? == digest(&replay.wonder(312)?)?
+                && digest(&concepts)? == digest(&replay.concepts(16)?)?;
+            if !replay_matches {
+                return Err(Error::Corrupt("nucleus replay mismatch".into()));
+            }
+            println!(
+                "{}",
+                serde_json::to_string_pretty(
+                    &serde_json::json!({"seed":seed,"noise":0.0,"steps":steps,"policy":match policy {ExplorationPolicy::Curiosity=>"curiosity",ExplorationPolicy::Coverage=>"coverage"},"trace":trace,"promotions":promotions,"concepts":concepts,"next_experiment":next,"replay_matches":replay_matches,"evaluation_loss":restored.kernel().model().loss(&data.evaluation)?,"limits":"Fixed-world diagnostic; reused validation; overlapping programs; no controller crash resume or demonstrated curiosity advantage"})
+                )?
+            );
         }
         Commands::Demo { journal, kind } => {
             let data = tesseract_workshop::dataset(100, 0.0)?;
