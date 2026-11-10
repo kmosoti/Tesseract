@@ -11,7 +11,7 @@ human_ratified: false
 ## Observed
 
 The reading corpus contains 15 revision-addressed English Wikipedia articles,
-1,141 selected passages, 1,332 preserved source MathML expressions, and 4,795
+1,141 selected passages, 1,332 preserved source MathML expressions, and 4,792
 normalized vocabulary terms. Its corpus digest is
 `0c2ee70fb00694e2f963d855a1f5df55b4c5f5e2f582c9851a857e6c858df03b`.
 All 15 archived revision HTML hashes and complete prose/MathML extraction matched.
