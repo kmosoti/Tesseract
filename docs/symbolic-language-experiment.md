@@ -109,7 +109,7 @@ Translation requires no journal. `ask` evaluates the translated term against a
 saved journal, then explains the result. `explain` evaluates SI directly and
 renders the same English result. Explanations report all four probabilities for
 predictions or the suggested program and estimated success for a goal, followed
-by model revision and evidence head. Displayed percentages are rounded to two
+by model revision and evidence head. Displayed percentages use inequality labels near zero and one, and otherwise round to two
 decimal places. They remain estimates. Existing JSON CLI output is unchanged.
 
 Every one of the 344 valid bounded terms is tested through canonical SI-to-English

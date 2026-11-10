@@ -11,3 +11,5 @@ serde_json.workspace = true
 tesseract-journal = { path = "../journal" }
 [lints]
 workspace = true
+[dev-dependencies]
+tempfile.workspace = true

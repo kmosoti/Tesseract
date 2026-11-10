@@ -114,6 +114,16 @@ fn action_name(action: Action) -> &'static str {
         Action::Cool => "cool",
     }
 }
+fn percentage(probability: f64) -> String {
+    let p = probability.clamp(0.0, 1.0);
+    if p > 0.0 && p < 0.0001 {
+        "less than 0.01%".into()
+    } else if p < 1.0 && p > 0.9999 {
+        "greater than 99.99%".into()
+    } else {
+        format!("{:.2}%", p * 100.0)
+    }
+}
 impl Term {
     /// Canonical SI source, validated even for externally constructed terms.
     pub fn to_source(&self) -> Result<String> {
@@ -205,7 +215,7 @@ impl Thought {
                         .probabilities
                         .iter()
                         .enumerate()
-                        .map(|(i, p)| format!("state {i}: {:.2}%", p * 100.0))
+                        .map(|(i, p)| format!("state {i}: {}", percentage(*p)))
                         .collect::<Vec<_>>()
                         .join(", ")
                 )
@@ -220,7 +230,7 @@ impl Thought {
                     return Err(Error::Invalid("invalid thought program".into()));
                 }
                 format!(
-                    "Suggested actions: {}. Estimated chance of state {}: {:.2}%.",
+                    "Suggested actions: {}. Estimated chance of state {}: {}.",
                     program
                         .query
                         .actions
@@ -229,7 +239,7 @@ impl Thought {
                         .collect::<Vec<_>>()
                         .join(" then "),
                     goal.target,
-                    program.expected_success * 100.0
+                    percentage(program.expected_success)
                 )
             }
             _ => return Err(Error::Invalid("thought term/value mismatch".into())),
