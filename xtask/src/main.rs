@@ -1,4 +1,6 @@
 use serde_json::{Value, json};
+mod reading;
+mod wikipedia;
 use std::{
     collections::{BTreeMap, BTreeSet},
     error::Error,
@@ -338,6 +340,9 @@ fn main() -> Result {
     std::env::set_current_dir(Path::new(env!("CARGO_MANIFEST_DIR")).parent().unwrap())?;
     let args: Vec<_> = std::env::args().skip(1).collect();
     match args.first().map(String::as_str) {
+        Some("wikipedia") => wikipedia::import(&args[1..]),
+        Some("wikipedia-verify") => wikipedia::verify(&args[1..]),
+        Some("reading-interview") => reading::interview(&args[1..]),
         Some("knowledge")=>knowledge(), Some("configure-github")=>configure(), Some("issues")=>issues(), Some("reproduce")=>reproduce(&args[1..]),
         Some("formal")=>{let lean=std::env::var("LEAN").unwrap_or_else(|_|"lean".into()); print!("{}",run(Command::new(lean).arg("formal/SI.lean"))?); print!("{}",run(Command::new("cargo").args(["test","--locked","-p","tesseract-si"]))?); Ok(())},
         _=>Err("usage: cargo xtask knowledge|formal|configure-github|issues|reproduce RECEIPT [BINARY] [SOURCE_DIR]".into())

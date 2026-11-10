@@ -44,6 +44,18 @@ cargo run --locked -p tesseract-si -- translate --to-english 'predict solid 1 he
 
 See the [supported English grammar and saved-state commands](docs/symbolic-language-experiment.md#english-adapter).
 
+Read the supplied Wikipedia quantum mechanics corpus and ask general questions:
+
+```bash
+cargo run --locked -p tesseract-si -- read data/quantum-mechanics/corpus.json runs/quantum-reading.json
+cargo run --locked -p tesseract-si -- ask-knowledge runs/quantum-reading.json 'What is quantum superposition?'
+```
+
+The [scientific reader](docs/scientific-reading.md) stores source revisions and
+retrieves cited excerpts offline. This is declarative reading memory; it does not
+demonstrate scientific reasoning or validate the imported claims. Wikipedia data
+has a [separate CC BY-SA license](data/quantum-mechanics/NOTICE).
+
 ## What this tests
 
 The workshop has noisy public observations and hidden, seeded material rules.

@@ -1,0 +1,84 @@
+Wikipedia quantum mechanics reading corpus
+
+The article text and MathML in corpus.json are adapted from English Wikipedia,
+written by Wikipedia contributors. This dataset is licensed separately from the
+Rust code under Creative Commons Attribution-ShareAlike 4.0 International:
+https://creativecommons.org/licenses/by-sa/4.0/
+
+Each article record identifies its title, page ID, revision ID, revision timestamp,
+retrieval timestamp, and hash of the retrieved revision HTML. Attribution and
+contributor histories are available at:
+  https://en.wikipedia.org/w/index.php?curid=PAGE_ID&action=history
+The version read is available at:
+  https://en.wikipedia.org/w/index.php?oldid=REVISION_ID
+Substitute the numeric IDs from the article record.
+
+Changes: selected paragraphs and standalone MathML were extracted; navigation,
+reference lists, and most non-prose material were excluded. Whitespace was
+normalized and long paragraphs split. Inline formulas were replaced by explicit
+references to preserved source MathML, without interpreting the mathematics.
+These changes are not endorsed by Wikipedia contributors. No images are copied.
+Wikipedia content is revisable and may contain errors; inclusion does not verify
+scientific claims. This corpus is not covered by the repository's MIT license.
+
+Sources and contributor histories:
+
+Quantum mechanics
+https://en.wikipedia.org/w/index.php?oldid=1380701615
+https://en.wikipedia.org/w/index.php?curid=25202&action=history
+
+Quantum state
+https://en.wikipedia.org/w/index.php?oldid=1381971930
+https://en.wikipedia.org/w/index.php?curid=30876419&action=history
+
+Quantum superposition
+https://en.wikipedia.org/w/index.php?oldid=1383426501
+https://en.wikipedia.org/w/index.php?curid=82728&action=history
+
+Measurement in quantum mechanics
+https://en.wikipedia.org/w/index.php?oldid=1383535646
+https://en.wikipedia.org/w/index.php?curid=573875&action=history
+
+Born rule
+https://en.wikipedia.org/w/index.php?oldid=1368836124
+https://en.wikipedia.org/w/index.php?curid=4313746&action=history
+
+Uncertainty principle
+https://en.wikipedia.org/w/index.php?oldid=1383940069
+https://en.wikipedia.org/w/index.php?curid=31883&action=history
+
+Quantum entanglement
+https://en.wikipedia.org/w/index.php?oldid=1383454028
+https://en.wikipedia.org/w/index.php?curid=25336&action=history
+
+No-communication theorem
+https://en.wikipedia.org/w/index.php?oldid=1373928374
+https://en.wikipedia.org/w/index.php?curid=1488320&action=history
+
+Quantum tunnelling
+https://en.wikipedia.org/w/index.php?oldid=1384069080
+https://en.wikipedia.org/w/index.php?curid=643769&action=history
+
+Wave–particle duality
+https://en.wikipedia.org/w/index.php?oldid=1382512601
+https://en.wikipedia.org/w/index.php?curid=33426&action=history
+
+Quantum decoherence
+https://en.wikipedia.org/w/index.php?oldid=1384689551
+https://en.wikipedia.org/w/index.php?curid=185732&action=history
+
+Schrödinger equation
+https://en.wikipedia.org/w/index.php?oldid=1383436244
+https://en.wikipedia.org/w/index.php?curid=59874&action=history
+
+Interpretations of quantum mechanics
+https://en.wikipedia.org/w/index.php?oldid=1384614079
+https://en.wikipedia.org/w/index.php?curid=54738&action=history
+
+Spin (physics)
+https://en.wikipedia.org/w/index.php?oldid=1383393253
+https://en.wikipedia.org/w/index.php?curid=19593829&action=history
+
+Double-slit experiment
+https://en.wikipedia.org/w/index.php?oldid=1383176532
+https://en.wikipedia.org/w/index.php?curid=8667&action=history

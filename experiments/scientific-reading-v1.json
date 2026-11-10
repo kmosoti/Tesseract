@@ -1,0 +1,27 @@
+{
+  "version":1,
+  "scope":"Wikipedia reading and cited extractive scientific questions; no external language model at answer time",
+  "invariants":["querying cannot change memory bytes or digest","answers quote stored passages exactly","corrupt memory is rejected","unsupported topics report missing evidence","reopen preserves answers"],
+  "questions":[
+    "What is quantum mechanics?",
+    "What is quantum superposition?",
+    "How does measurement affect a quantum state?",
+    "What does the uncertainty principle say about position and momentum?",
+    "Can quantum entanglement send messages faster than light?",
+    "How does quantum tunnelling work?",
+    "What is the Born rule?",
+    "What is the difference between superposition and entanglement?",
+    "What is quantum decoherence?",
+    "What does the Schrodinger equation describe?",
+    "Does quantum mechanics prove that consciousness causes collapse?",
+    "What is the best recipe for banana bread?",
+    "What is a quantum banana recipe?"
+  ],
+  "held_out_questions":[
+    "Why can a particle cross a barrier that classical physics forbids?",
+    "Why can't we know an electron's exact position and momentum together?",
+    "Does observing one entangled particle allow instantaneous communication?",
+    "Which interpretation of quantum mechanics has been conclusively proved correct?",
+    "How much will my electricity bill cost next month?"
+  ]
+}

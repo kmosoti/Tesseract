@@ -12,6 +12,8 @@ pub enum Term {
     Seek(Goal),
     Concepts,
     Wonder,
+    /// Open-text question over explicitly supplied scientific reading memory.
+    Recall(String),
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum Value {
@@ -27,10 +29,22 @@ pub struct Thought {
     pub evidence_head: String,
     pub revision: u64,
 }
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ReadingThought {
+    pub term: Term,
+    pub answer: tesseract_knowledge::Answer,
+}
 impl Term {
     /// Canonical surface syntax has no free-form instructions or implicit context.
     /// `predict porous 0 heat press` or `seek solid 1 3`.
     pub fn parse(source: &str) -> Result<Self> {
+        if source.len() <= 8192
+            && let Some(question) = source.trim().strip_prefix("recall ")
+        {
+            let question: String = serde_json::from_str(question)?;
+            tesseract_knowledge::validate_question(&question)?;
+            return Ok(Self::Recall(question));
+        }
         if source.len() > 256 {
             return Err(Error::Budget("SI term exceeds 256 bytes".into()));
         }
@@ -91,6 +105,11 @@ impl Term {
     pub fn evaluate(&self, kernel: &Kernel, budget: Budget) -> Result<Thought> {
         budget.validate()?;
         let value = match self {
+            Self::Recall(_) => {
+                return Err(Error::Invalid(
+                    "recall requires reading memory, not a workshop kernel".into(),
+                ));
+            }
             Self::Concepts => {
                 Value::Concepts(tesseract_nucleus::Nucleus::from_kernel(kernel)?.concepts(16)?)
             }
@@ -112,6 +131,18 @@ impl Term {
             value,
             evidence_head: kernel.evidence_head().into(),
             revision: kernel.revision(),
+        })
+    }
+    pub fn evaluate_reading(
+        &self,
+        memory: &tesseract_knowledge::KnowledgeBase,
+    ) -> Result<ReadingThought> {
+        let Self::Recall(question) = self else {
+            return Err(Error::Invalid("reading memory accepts recall terms".into()));
+        };
+        Ok(ReadingThought {
+            term: self.clone(),
+            answer: memory.ask(question)?,
         })
     }
 }
