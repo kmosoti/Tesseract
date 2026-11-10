@@ -96,3 +96,13 @@ the entire chain. A trusted externally retained digest supplies that anchor.
 Behavioral hashes exclude clocks, RSS, worker scheduling, and temporary paths.
 Numeric reproducibility is asserted for the pinned environment and deterministic
 ordering, not bitwise equivalence across all BLAS implementations or platforms.
+
+## Experimental symbolic nucleus
+
+The [working nucleus](nucleus.md) consumes public observation events and derives
+conditional propositions and structural hypotheses. It does not read hidden
+workshop rules, replace numerical predictions, or install validated competence.
+The lab exploration controller can use its disagreement policy to choose actual
+experiments; `concepts` and `wonder` expose read-only views through SI. Existing
+journal events reconstruct the view, avoiding a persisted-schema change. This is
+bounded abstraction over known predicates, not arbitrary ontology invention.

@@ -32,3 +32,23 @@ theorem prediction_is_not_observation (revision outcome actual : Nat) :
     Evidence.predicted revision outcome ≠ Evidence.observed actual := by
   intro h
   cases h
+
+-- Reference policy for working hypotheses, separate from numerical competence.
+inductive WorkingStatus where
+  | candidate | supported | contested
+  deriving DecidableEq
+
+def classify (support counterexamples : Nat) (crossCondition : Bool) : WorkingStatus :=
+  if counterexamples > 0 then .contested
+  else if support >= 3 ∧ crossCondition = true then .supported
+  else .candidate
+
+theorem counterexample_contests (s c : Nat) (cross : Bool) (h : c > 0) :
+    classify s c cross = .contested := by
+  simp [classify, h]
+
+theorem working_support_has_no_counterexamples (s c : Nat) (cross : Bool)
+    (h : classify s c cross = .supported) : c = 0 := by
+  cases c with
+  | zero => rfl
+  | succ n => simp [classify] at h

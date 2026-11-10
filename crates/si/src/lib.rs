@@ -10,11 +10,15 @@ use tesseract_kernel::{CognitiveKernel, Kernel};
 pub enum Term {
     Predict(Query),
     Seek(Goal),
+    Concepts,
+    Wonder,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum Value {
     Prediction(Prediction),
     Program(Experiment),
+    Concepts(Vec<tesseract_nucleus::Concept>),
+    Curiosity(tesseract_nucleus::Curiosity),
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Thought {
@@ -29,6 +33,11 @@ impl Term {
     pub fn parse(source: &str) -> Result<Self> {
         if source.len() > 256 {
             return Err(Error::Budget("SI term exceeds 256 bytes".into()));
+        }
+        match source.trim() {
+            "concepts" => return Ok(Self::Concepts),
+            "wonder" => return Ok(Self::Wonder),
+            _ => {}
         }
         let words: Vec<_> = source.split_whitespace().collect();
         if words.len() < 4 || words.len() > 6 {
@@ -82,6 +91,13 @@ impl Term {
     pub fn evaluate(&self, kernel: &Kernel, budget: Budget) -> Result<Thought> {
         budget.validate()?;
         let value = match self {
+            Self::Concepts => {
+                Value::Concepts(tesseract_nucleus::Nucleus::from_kernel(kernel)?.concepts(16)?)
+            }
+            Self::Wonder => Value::Curiosity(
+                tesseract_nucleus::Nucleus::from_kernel(kernel)?
+                    .wonder(budget.evaluations.min(312))?,
+            ),
             Self::Predict(query) => Value::Prediction(kernel.predict(query)?),
             Self::Seek(goal) => Value::Program(
                 kernel

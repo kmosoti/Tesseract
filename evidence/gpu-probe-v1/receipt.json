@@ -1,0 +1,58 @@
+{
+  "adapter_identity_assumption": "single discrete GPU verified locally by lspci",
+  "burn": "0.22.1",
+  "cold_device_and_model_ms": 410.722288,
+  "gpu_baseline_mib": 181,
+  "gpu_delta_peak_observed_mib": 50,
+  "gpu_peak_observed_mib": 231,
+  "journal_head": "eef6817a5b84b06681d04a21d90c3f566caa3d63f01c4755f3654b26e795e33d",
+  "nvidia_telemetry_index": 0,
+  "repetitions": 10,
+  "results": [
+    {
+      "batch": 1,
+      "cpu_ms_cache_persistent": 0.0000341,
+      "cpu_ms_cache_rebuilt": 0.06324969999999999,
+      "cpu_ms_uncached": 0.0324032,
+      "gpu_ms_upload_compute_readback": 0.21306570000000002,
+      "max_abs_error": 5.786291257248166E-8
+    },
+    {
+      "batch": 32,
+      "cpu_ms_cache_persistent": 0.00006630000000000001,
+      "cpu_ms_cache_rebuilt": 0.0698006,
+      "cpu_ms_uncached": 0.41315270000000004,
+      "gpu_ms_upload_compute_readback": 0.26296189999999997,
+      "max_abs_error": 5.786291257248166E-8
+    },
+    {
+      "batch": 256,
+      "cpu_ms_cache_persistent": 0.00028090000000000005,
+      "cpu_ms_cache_rebuilt": 0.0633874,
+      "cpu_ms_uncached": 3.1293797,
+      "gpu_ms_upload_compute_readback": 0.270235,
+      "max_abs_error": 5.786291257248166E-8
+    },
+    {
+      "batch": 4096,
+      "cpu_ms_cache_persistent": 0.0030653,
+      "cpu_ms_cache_rebuilt": 0.074026,
+      "cpu_ms_uncached": 50.6699994,
+      "gpu_ms_upload_compute_readback": 0.49194039999999994,
+      "max_abs_error": 5.786291257248166E-8
+    }
+  ],
+  "scope": "fixed 3-action program; f32 realified channel vs f64 authoritative CPU; no runtime backend replacement",
+  "soft_vram_budget_mib": 1024,
+  "source_model_hash": "4cf9b54af2b787bd7fe5ef2ab51965e7788ca5f43735713585cb2495927abe64",
+  "source_revision_id": 1,
+  "wgpu_selector": "Vulkan DiscreteGpu(0)",
+  "provenance": {
+    "source_parent_commit": "4d57a93d073f910bf0955480fcd8e83f9392e569",
+    "source_dirty": true,
+    "toolchain": "rustc 1.100.0-beta.7 (fd8e211ae 2026-10-17)",
+    "cpu": "Intel Core i7-10750H",
+    "gpu": "NVIDIA RTX 3060 Laptop GPU",
+    "note": "Source and measured binary hashes in SHA256SUMS; source code was uncommitted during measurement."
+  }
+}

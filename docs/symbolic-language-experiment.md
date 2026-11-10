@@ -115,3 +115,9 @@ decimal places. They remain estimates. Existing JSON CLI output is unchanged.
 Every one of the 344 valid bounded terms is tested through canonical SI-to-English
 and English-to-SI round trips. This ensures coverage of the present vocabulary;
 it is not a claim of general natural-language understanding.
+
+The additional `concepts` and `wonder` operators expose the experimental
+[working nucleus](nucleus.md). English forms are “What concepts have you formed?”
+and “What should you investigate next?” Working hypotheses remain distinct from
+validated numerical competence. These two singleton terms add two round trips
+to the 344 bounded prediction/goal terms above.
