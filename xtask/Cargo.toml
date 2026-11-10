@@ -5,6 +5,8 @@ edition.workspace = true
 license.workspace = true
 [dependencies]
 serde_json.workspace = true
+tesseract-knowledge = { path = "../crates/knowledge" }
+scraper = "0.24"
 [lints]
 workspace = true
 [dev-dependencies]

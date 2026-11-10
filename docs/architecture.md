@@ -14,6 +14,7 @@ primitives, a general ontology, or an autonomous scientific method.
 | journal | Single-writer event storage, replay, checkpoints | Simulator truth |
 | workshop | Private seeded material rules, noisy final sensor readings | Cognitive implementation |
 | lab | Protocols, controls, paired evaluation, resource measurements, CLI | Privileged access passed into kernels |
+| knowledge | Source-attributed reading snapshots, passage retrieval, source mathematics | Numerical kernels, simulator truth, external answer services |
 
 The workshop begins an episode with a public four-category sensor state and a
 public porous/nonporous feature. Heat, press, and cool act on private material
@@ -106,3 +107,14 @@ The lab exploration controller can use its disagreement policy to choose actual
 experiments; `concepts` and `wonder` expose read-only views through SI. Existing
 journal events reconstruct the view, avoiding a persisted-schema change. This is
 bounded abstraction over known predicates, not arbitrary ontology invention.
+
+## Declarative scientific reading
+
+The [scientific reader](scientific-reading.md) accepts a separately imported
+corpus, preserves revision provenance and source MathML, and builds a deterministic
+lexical index. SI `recall` terms evaluate against this reading memory, returning
+excerpts and their evidence references. Read-only questioning cannot install
+validated competence or alter workshop predictions. This boundary prevents
+imported prose from becoming a sealed numerical learning result. Corpus reading
+is persistent knowledge acquisition; retrieval alone does not establish semantic
+entailment, truth, or general scientific reasoning.

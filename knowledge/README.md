@@ -15,6 +15,7 @@ and `ratified_on`. Do not silently overturn a ratified decision.
 | [D-0001](decisions/D-0001-developmental-kernel.md) | Decision | false | Developmental thesis and experimental substrates |
 | [D-0002](decisions/D-0002-working-agreement.md) | Decision | false | Iterative development, review, and release model |
 | [D-0003](decisions/D-0003-workshop-protocol.md) | Decision | false | Frozen comparison and advancement gates |
+| [D-0004](decisions/D-0004-scientific-reading.md) | Decision | false | Declarative scientific reading and source provenance |
 | [R-0001](research/R-0001-substrate-evidence.md) | Research | false | Evidence, alternatives, and unanswered questions |
 | [O-0001](observations/O-0001-bootstrap.md) | Observation | false | Starting environment and publication blocker |
 | [O-0002](observations/O-0002-freeze-verification.md) | Observation | false | Independent qualification before frozen evaluation |
