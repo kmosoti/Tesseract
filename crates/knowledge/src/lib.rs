@@ -385,7 +385,10 @@ impl KnowledgeBase {
                         / (tf + 1.2 * (0.25 + 0.75 * passage.length as f64 / self.average_length));
                 }
             }
-            if matches > 0 {
+            // Corpus-wide vocabulary coverage alone admits unrelated questions
+            // whose words occur in unrelated places. Every returned passage must
+            // cover at least half of the content terms in this specific question.
+            if matches > 0 && matches * 2 >= query.len() {
                 score *= matches as f64 / matched as f64;
                 let title = &titles[passage.article];
                 // Title priors do not make tiny fragments appear highly relevant.
@@ -530,6 +533,7 @@ fn tokens(text: &str) -> Vec<String> {
             }
             let canonical = match word {
                 "schrödinger" => "schrodinger",
+                "entangled" | "entangling" | "entangle" => "entanglement",
                 "measure" | "measuring" | "measurements" | "observing" | "observation"
                 | "observe" => "measurement",
                 "message" | "messages" | "communicate" | "communicating" | "signal" | "signals"
