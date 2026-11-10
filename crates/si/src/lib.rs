@@ -1,4 +1,5 @@
 //! SI v0: bounded symbolic terms evaluated against persistent cognitive state.
+pub mod english;
 use serde::{Deserialize, Serialize};
 use tesseract_contracts::{
     Action, Budget, Error, Experiment, Features, Goal, Prediction, Query, Result,
