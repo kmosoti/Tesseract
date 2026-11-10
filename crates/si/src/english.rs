@@ -116,7 +116,9 @@ fn action_name(action: Action) -> &'static str {
 }
 fn percentage(probability: f64) -> String {
     let p = probability.clamp(0.0, 1.0);
-    if p > 0.0 && p < 0.0001 {
+    if p == 0.0 {
+        "0.00%".into()
+    } else if p < 0.0001 {
         "less than 0.01%".into()
     } else if p < 1.0 && p > 0.9999 {
         "greater than 99.99%".into()

@@ -156,6 +156,10 @@ fn explanation_preserves_small_nonzero_uncertainty() {
         tesseract_contracts::Prediction::new([-1e-10, 1.0 + 1e-10, 0.0, 0.0], 0).unwrap(),
     );
     assert!(!thought.to_english().unwrap().contains("-0.00%"));
+    thought.value = tesseract_si::Value::Prediction(
+        tesseract_contracts::Prediction::new([-0.0, 1.0, 0.0, 0.0], 0).unwrap(),
+    );
+    assert!(!thought.to_english().unwrap().contains("-0.00%"));
 }
 #[test]
 fn saved_state_commands_preserve_journal_and_legacy_json() {
