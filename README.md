@@ -35,6 +35,15 @@ The coordinator runs isolated workers, capped at four. Each Linux process is
 limited to 1 GiB virtual address space. No GPU, model download, LLM, or network
 service is required at runtime.
 
+Translate English goals into SI or explain SI in English:
+
+```bash
+cargo run --locked -p tesseract-si -- translate --to-si 'How can a porous object go from state 0 to state 2?'
+cargo run --locked -p tesseract-si -- translate --to-english 'predict solid 1 heat cool'
+```
+
+See the [supported English grammar and saved-state commands](docs/symbolic-language-experiment.md#english-adapter).
+
 ## What this tests
 
 The workshop has noisy public observations and hidden, seeded material rules.

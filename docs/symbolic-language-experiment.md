@@ -77,3 +77,41 @@ Next language work requires explicit composition/dependency nodes, durable thoug
 records and controller state, independent validation streams, and an untouched
 transfer protocol. The current slice establishes an executable public grammar and
 a persistent learning cycle on a bounded world.
+
+## English adapter
+
+The Rust English adapter provides deterministic translation for the current SI
+vocabulary. It accepts these sentence forms (case insensitive, with an optional
+final period or question mark):
+
+```text
+Predict the outcome for a porous object starting in state 0 after heat then press.
+What happens to a nonporous object in state 2 after cool then heat?
+Find actions for a nonporous object starting in state 1 to reach state 3.
+How can a porous object go from state 0 to state 2?
+```
+
+Features can be `porous`, `nonporous`, `non-porous`, or SI's `solid` alias.
+English output uses `nonporous` for the latter three. Actions retain their order;
+programs remain limited to three actions and state labels to 0..3. English input
+is limited to 512 ASCII bytes. Unsupported wording, negation, unspecified state,
+and out-of-domain concepts are rejected; the adapter supplies example templates.
+It does not infer physical meanings for the numbered states.
+
+```bash
+cargo run --locked -p tesseract-si -- translate --to-si 'How can a porous object go from state 0 to state 2?'
+cargo run --locked -p tesseract-si -- translate --to-english 'predict solid 1 heat cool'
+cargo run --locked -p tesseract-si -- ask runs/demo.jsonl 'What happens to a porous object in state 0 after heat?'
+cargo run --locked -p tesseract-si -- explain runs/demo.jsonl 'seek porous 0 2'
+```
+
+Translation requires no journal. `ask` evaluates the translated term against a
+saved journal, then explains the result. `explain` evaluates SI directly and
+renders the same English result. Explanations report all four probabilities for
+predictions or the suggested program and estimated success for a goal, followed
+by model revision and evidence head. Displayed percentages are rounded to two
+decimal places. They remain estimates. Existing JSON CLI output is unchanged.
+
+Every one of the 344 valid bounded terms is tested through canonical SI-to-English
+and English-to-SI round trips. This ensures coverage of the present vocabulary;
+it is not a claim of general natural-language understanding.

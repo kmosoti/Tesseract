@@ -22,6 +22,7 @@ and `ratified_on`. Do not silently overturn a ratified decision.
 | [O-0004](observations/O-0004-journal-recovery.md) | Observation | false | Journal recovery failure and publication status |
 | [O-0005](observations/O-0005-symbolic-loop.md) | Observation | false | Complex symbolic feedback loop and language exploration |
 | [O-0006](observations/O-0006-si-execution.md) | Observation | false | Executable SI, formal checks, and Rust tooling |
+| [O-0007](observations/O-0007-english-adapter.md) | Observation | false | Bidirectional English adapter and bounded round trips |
 
 Each record distinguishes Observed, Inferred, Hypothesis, and Unknown; includes
 typed relative links in Relations; and states Revisit when. Keep useful backlinks.
