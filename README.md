@@ -48,6 +48,7 @@ empirical classical embedding and have different coordinate/storage costs.
 - [Architecture and precise limitations](docs/architecture.md)
 - [Protocol, controls, metrics, and gates](docs/methodology.md)
 - [Developmental roadmap](docs/roadmap.md)
+- [Symbolic language exploration](docs/symbolic-language-experiment.md)
 - [Frozen results and reproduction](evidence/workshop-v1/README.md)
 - [Linked knowledge graph](knowledge/README.md)
 - [Contributor workflow](CONTRIBUTING.md) and [agent agreement](AGENTS.md)
