@@ -67,6 +67,5 @@ and fixed bounded actions. Ontology growth, richer partial observability, graph
 and VSA baselines, selective retraction, and execution on Fedora remain follow-up
 work. No general-intelligence or consciousness claim is made.
 
-Repository publication is separately blocked by integration permissions; see
-[publication status](publication.md). Local evidence does not establish remote
-CI or branch protection.
+See [publication status](publication.md) for the repository and release state.
+Local evidence does not establish remote CI or branch protection.

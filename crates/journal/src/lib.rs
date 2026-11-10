@@ -26,12 +26,42 @@ pub struct Journal {
     file: File,
     sequence: usize,
     head: String,
+    poisoned: bool,
+    #[cfg(test)]
+    fail_after_write: bool,
+    #[cfg(test)]
+    fail_restore: bool,
 }
 impl Journal {
+    fn write_and_sync(&mut self, bytes: &[u8]) -> std::io::Result<()> {
+        self.file.write_all(bytes)?;
+        #[cfg(test)]
+        if self.fail_after_write {
+            return Err(std::io::Error::other("injected sync failure"));
+        }
+        self.file.sync_all()
+    }
+    fn restore(&mut self, length: u64) -> std::io::Result<()> {
+        #[cfg(test)]
+        if self.fail_restore {
+            return Err(std::io::Error::other("injected restore failure"));
+        }
+        self.file.set_len(length)?;
+        self.file.sync_all()
+    }
+    fn ensure_usable(&self) -> Result<()> {
+        if self.poisoned {
+            return Err(Error::Invalid(
+                "journal recovery failed; close and reopen the session".into(),
+            ));
+        }
+        Ok(())
+    }
     fn append(&mut self, payload: Payload) -> Result<()> {
         self.append_batch(vec![payload])
     }
     fn append_batch(&mut self, payloads: Vec<Payload>) -> Result<()> {
+        self.ensure_usable()?;
         let mut sequence = self.sequence;
         let mut head = self.head.clone();
         let mut bytes = Vec::new();
@@ -54,14 +84,15 @@ impl Journal {
             return Err(Error::Budget("journal exceeds 64 MiB".into()));
         }
         self.file.seek(SeekFrom::End(0))?;
-        if let Err(error) = self
-            .file
-            .write_all(&bytes)
-            .and_then(|()| self.file.sync_all())
-        {
-            // Restore the prior transaction if the process is still alive.
-            self.file.set_len(original)?;
-            self.file.sync_all()?;
+        if let Err(error) = self.write_and_sync(&bytes) {
+            // An unsuccessful restoration leaves disk and memory potentially divergent.
+            self.poisoned = true;
+            if let Err(restore_error) = self.restore(original) {
+                return Err(Error::Invalid(format!(
+                    "journal write failed: {error}; recovery failed: {restore_error}; close and reopen the session"
+                )));
+            }
+            self.poisoned = false;
             return Err(error.into());
         }
         self.sequence = sequence;
@@ -122,6 +153,11 @@ impl Journal {
             file,
             sequence,
             head,
+            poisoned: false,
+            #[cfg(test)]
+            fail_after_write: false,
+            #[cfg(test)]
+            fail_restore: false,
         };
         let kernel = match kernel {
             Some(k) => k,
@@ -136,6 +172,9 @@ impl Journal {
             }
             None => return Err(Error::Corrupt("missing complete journal header".into())),
         };
+        // Replayed complete records or an earlier truncation may still be dirty
+        // after a previous session's failed sync. Do not expose them until synced.
+        journal.file.sync_all()?;
         Ok((journal, kernel))
     }
 }
@@ -199,6 +238,7 @@ impl Session {
         self.install(next)
     }
     pub fn checkpoint(&self, path: impl AsRef<Path>) -> Result<()> {
+        self.journal.ensure_usable()?;
         let snapshot = Checkpoint {
             schema: SCHEMA,
             journal_head: self.head().to_owned(),
@@ -220,6 +260,7 @@ impl Session {
     }
     /// Checkpoints are verified against replay, never trusted as an alternate truth.
     pub fn verify_checkpoint(&self, path: impl AsRef<Path>) -> Result<()> {
+        self.journal.ensure_usable()?;
         let file = File::open(path)?;
         if file.metadata()?.len() > MAX_JOURNAL_BYTES {
             return Err(Error::Budget("checkpoint exceeds 64 MiB".into()));
@@ -250,6 +291,64 @@ mod tests {
     use super::*;
     use tesseract_contracts::Budget;
     use tesseract_kernel::ValidationPolicy;
+    #[test]
+    fn complete_failed_append_can_be_replayed_after_failed_restore() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("events.jsonl");
+        let mut session = Session::create(&path, Kind::Bayesian).unwrap();
+        let experience = tesseract_workshop::dataset(1, 0.0)
+            .unwrap()
+            .training
+            .remove(0);
+        let mut expected = session.kernel().clone();
+        expected.observe(experience.clone()).unwrap();
+        session.journal.fail_after_write = true;
+        session.journal.fail_restore = true;
+        assert!(session.observe(experience).is_err());
+        assert!(
+            session
+                .checkpoint(dir.path().join("snapshot.json"))
+                .is_err()
+        );
+        drop(session);
+        let reopened = Session::open(&path).unwrap();
+        assert_eq!(
+            reopened.kernel().state_digest().unwrap(),
+            expected.state_digest().unwrap()
+        );
+    }
+    #[test]
+    fn failed_write_and_failed_restore_require_reopen() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("events.jsonl");
+        let mut session = Session::create(&path, Kind::Bayesian).unwrap();
+        let before = session.kernel().state_digest().unwrap();
+        // A read-only descriptor makes both write and truncation fail.
+        session.journal.file = File::open(&path).unwrap();
+        let experience = tesseract_workshop::dataset(1, 0.0)
+            .unwrap()
+            .training
+            .remove(0);
+        let error = session.observe(experience.clone()).unwrap_err().to_string();
+        assert!(error.contains("recovery failed"), "{error}");
+        assert_eq!(session.kernel().state_digest().unwrap(), before);
+        assert!(
+            session
+                .observe(experience.clone())
+                .unwrap_err()
+                .to_string()
+                .contains("close and reopen")
+        );
+        assert!(
+            session
+                .checkpoint(dir.path().join("snapshot.json"))
+                .is_err()
+        );
+        drop(session);
+        let mut reopened = Session::open(&path).unwrap();
+        assert_eq!(reopened.kernel().state_digest().unwrap(), before);
+        reopened.observe(experience).unwrap();
+    }
     #[test]
     fn durable_commit_restart_checkpoint_and_rollback() {
         let dir = tempfile::tempdir().unwrap();

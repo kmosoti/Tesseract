@@ -8,8 +8,8 @@ representations share public cognitive contracts.
 **Status:** kernel v0.1 is implemented and independently reviewed locally. The
 frozen 100-seed comparison supports persistent transition learning and bounded
 macro reuse; complex channels did not outperform the real-valued candidate.
-See [the measured verdict](docs/findings.md). Public repository creation remains
-blocked by GitHub integration permissions. No general-intelligence or unrestricted
+See [the measured verdict](docs/findings.md). Development is published on the
+`develop` branch. No general-intelligence or unrestricted
 concept-invention claim follows from these results.
 
 ## Run
@@ -51,7 +51,7 @@ empirical classical embedding and have different coordinate/storage costs.
 - [Frozen results and reproduction](evidence/workshop-v1/README.md)
 - [Linked knowledge graph](knowledge/README.md)
 - [Contributor workflow](CONTRIBUTING.md) and [agent agreement](AGENTS.md)
-- [Publication status and administrative blocker](docs/publication.md)
+- [Publication status](docs/publication.md)
 
 Project knowledge is revisable Markdown with linked D-/R-/O- records. Runtime
 memory is a separate versioned event journal with provenance and rollback.
