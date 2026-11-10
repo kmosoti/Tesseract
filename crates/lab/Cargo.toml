@@ -24,3 +24,6 @@ rlimit = "0.10"
 
 [lints]
 workspace = true
+
+[dev-dependencies]
+tesseract-si = { path = "../si" }

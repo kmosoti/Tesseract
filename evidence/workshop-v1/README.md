@@ -28,11 +28,12 @@ git worktree add --detach ../tesseract-workshop-v1 62cfd5b3b21eb5b28bfcc7389d3de
 cd ../tesseract-workshop-v1
 cargo build --locked --release --workspace
 cargo run --locked --release -p tesseract-lab -- compare --tier benchmark --workers 2 --out runs/replication.json
-python3 scripts/reproduce_evidence.py runs/replication.json
+cd -
+cargo xtask reproduce ../tesseract-workshop-v1/runs/replication.json ../tesseract-workshop-v1/target/release/tesseract ../tesseract-workshop-v1
 ```
 
 For comparison against the original receipt, pass its absolute path to
-`reproduce_evidence.py` from this frozen worktree. It compares behavioral hashes;
+`cargo xtask reproduce RECEIPT BINARY SOURCE_DIR` from the current tooling checkout. It compares behavioral hashes;
 observational timing, RSS, scheduling, and executable build-path differences are
 not claimed to be bitwise reproducible. CPU and operating-system changes can
 affect floating-point hashes; report such a deviation instead of rewriting this

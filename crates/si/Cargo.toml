@@ -1,0 +1,13 @@
+[package]
+name = "tesseract-si"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+[dependencies]
+tesseract-contracts.workspace = true
+tesseract-kernel.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+tesseract-journal = { path = "../journal" }
+[lints]
+workspace = true

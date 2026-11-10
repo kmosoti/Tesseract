@@ -1,5 +1,5 @@
 [workspace]
-members = ["crates/contracts", "crates/kernel", "crates/journal", "crates/workshop", "crates/lab"]
+members = ["crates/contracts", "crates/kernel", "crates/journal", "crates/workshop", "crates/lab", "crates/si", "xtask"]
 resolver = "3"
 
 [workspace.package]

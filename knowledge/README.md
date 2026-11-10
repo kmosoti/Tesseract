@@ -21,11 +21,12 @@ and `ratified_on`. Do not silently overturn a ratified decision.
 | [O-0003](observations/O-0003-workshop-verdict.md) | Observation | false | Supported transfer/macro learning; negative complex-substrate result |
 | [O-0004](observations/O-0004-journal-recovery.md) | Observation | false | Journal recovery failure and publication status |
 | [O-0005](observations/O-0005-symbolic-loop.md) | Observation | false | Complex symbolic feedback loop and language exploration |
+| [O-0006](observations/O-0006-si-execution.md) | Observation | false | Executable SI, formal checks, and Rust tooling |
 
 Each record distinguishes Observed, Inferred, Hypothesis, and Unknown; includes
 typed relative links in Relations; and states Revisit when. Keep useful backlinks.
 Supersede decisions explicitly rather than deleting their history. IDs are never
-reused. Run `python3 scripts/validate_knowledge.py` to check graph integrity.
+reused. Run `cargo xtask knowledge` to check graph integrity.
 
 Use the following front matter for new records:
 

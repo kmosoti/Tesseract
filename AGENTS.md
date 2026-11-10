@@ -4,6 +4,9 @@ Scope: this repository. Read README.md, CONTRIBUTING.md, docs/architecture.md,
 and knowledge/README.md before changes. Inspect actual state; planned work is
 not evidence that implementation exists. Preserve unrelated changes.
 
+- Use the pinned Rust 1.100 toolchain for implementation and Rust xtasks for
+  repository automation. Do not introduce Python tooling or dependencies.
+
 - Keep domain contracts independent of numeric kernels, storage, simulation,
   and evaluation. Kernels receive public experiences, never hidden world rules.
 - Keep queries read-only. Separate working beliefs from validated durable
