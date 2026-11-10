@@ -19,6 +19,7 @@ and `ratified_on`. Do not silently overturn a ratified decision.
 | [O-0001](observations/O-0001-bootstrap.md) | Observation | false | Starting environment and publication blocker |
 | [O-0002](observations/O-0002-freeze-verification.md) | Observation | false | Independent qualification before frozen evaluation |
 | [O-0003](observations/O-0003-workshop-verdict.md) | Observation | false | Supported transfer/macro learning; negative complex-substrate result |
+| [O-0004](observations/O-0004-journal-recovery.md) | Observation | false | Journal recovery failure and publication status |
 
 Each record distinguishes Observed, Inferred, Hypothesis, and Unknown; includes
 typed relative links in Relations; and states Revisit when. Keep useful backlinks.

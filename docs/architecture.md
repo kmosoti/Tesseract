@@ -83,6 +83,11 @@ sequence, previous digest, and payload digest. Replay revalidates commits agains
 their stored public validation episodes. Incomplete final lines can be recovered;
 complete corrupt records fail. Journals are limited to 64 MiB.
 
+If an append fails and restoring and syncing the original length also fails, the
+session rejects further writes and checkpoint operations. Close and reopen it to
+replay the journal; an append that returned an error may nevertheless be present
+if its complete record reached disk before recovery failed.
+
 Checkpoints are atomically published, exclusive snapshots checked against journal
 replay. They do not replace the verified event stream. Unkeyed hashes detect
 corruption and bind evidence; they do not authenticate an attacker who can rewrite

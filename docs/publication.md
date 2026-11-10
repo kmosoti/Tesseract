@@ -1,21 +1,14 @@
 # Publication status
 
-**Local implementation; remote repository creation is blocked.**
+The public repository is available at https://github.com/kmosoti/Tesseract.
+The implementation is published on `develop`; GitHub's `main` currently contains
+an unrelated initial commit. Promoting the implementation requires reconciling
+those histories and human review under the working agreement.
 
-On 2026-11-09, the authenticated GitHub integration returned
-`Resource not accessible by integration (createRepository)` for creation of
-public `kmosoti/tesseract`. No public repository, issues, remote CI, environments,
-or branch protections have been created or verified by this session.
+As checked on 2026-11-09, GitHub reported that `main` had no branch protection.
+Workflow files alone do not establish that an environment gate or branch rules
+are active. Verify repository settings before relying on them.
 
-The local `main` branch contains the minimal bootstrap. Development and reviewed
-implementation are kept on `develop` / its feature branch. Agents do not promote
-this implementation to `main`; the release remains human-gated.
-
-An owner-authorized setup is prepared in `scripts/publish.sh` and
-`scripts/configure_github.py`. It must run with credentials permitting repository
-creation and administration. The script does not print tokens, approve deployment
-gates, or merge into `main`. It verifies settings before reporting success.
-
-The issue seed file can be published idempotently after repository creation with
-`python3 scripts/configure_github.py --issues`. If administration fails, keep the
-specific failing action visible and do not claim protections are enforced.
+`scripts/configure_github.py` describes the intended administration and can seed
+issues; review its actions and credentials before running it. The original
+repository-creation blocker is retained as history in the knowledge graph.
