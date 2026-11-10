@@ -9,6 +9,6 @@ As checked on 2026-11-09, GitHub reported that `main` had no branch protection.
 Workflow files alone do not establish that an environment gate or branch rules
 are active. Verify repository settings before relying on them.
 
-`scripts/configure_github.py` describes the intended administration and can seed
+`cargo xtask configure-github` describes the intended administration and can seed
 issues; review its actions and credentials before running it. The original
 repository-creation blocker is retained as history in the knowledge graph.

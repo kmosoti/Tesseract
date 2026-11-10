@@ -13,5 +13,5 @@ test "$(git remote get-url origin)" = 'https://github.com/kmosoti/tesseract.git'
 # The initial main bootstrap is not a release promotion. Never merge main here.
 git push origin main develop
 gh repo edit kmosoti/tesseract --default-branch main
-python3 scripts/configure_github.py
-python3 scripts/configure_github.py --issues
+cargo xtask configure-github
+cargo xtask issues

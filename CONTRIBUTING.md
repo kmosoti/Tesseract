@@ -37,7 +37,7 @@ Knowledge: <linked record IDs>
 cargo fmt --all --check
 cargo clippy --locked --workspace --all-targets -- -D warnings
 cargo test --locked --workspace
-python3 scripts/validate_knowledge.py
+cargo xtask knowledge
 ```
 
 Use smoke seeds during implementation. Development seeds are separate from the
@@ -55,3 +55,11 @@ main branch also requires one eligible approving review; an author cannot approv
 their own PR, so that review must come from another eligible human account.
 Verify remote configuration using administrative reads. See docs/publication.md for
 actual publication status; local files cannot enforce these settings.
+
+## Formal and language checks
+
+The dated `beta-2026-10-18` toolchain is Rust 1.100. Install Z3 on PATH and
+Lean via elan; `lean-toolchain` pins the proof checker. Run `cargo xtask formal`
+in addition to the workspace checks. The intelligence diagnostic is
+`cargo test --locked -p tesseract-lab --test si_intelligence -- --nocapture`.
+All repository automation is Rust; use xtasks when adding development tooling.

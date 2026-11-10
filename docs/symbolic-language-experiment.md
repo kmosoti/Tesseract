@@ -1,37 +1,79 @@
-# Exploring a persistent symbolic language
+# SI v0: grounded symbolic execution
 
-The current experiment uses typed `Goal`, `Query`, `Experience`, and `Process`
-values as grounded symbols. A goal selects a bounded action program using the
-complex-valued model; the workshop returns a public experience; the journal
-preserves that experience and accepted competence. No text prompt or LLM is
-involved. This is a closed-loop diagnostic, not yet a new language interpreter.
+SI is an executable, bounded language backed by Tesseract's persistent cognitive
+state. Its first two operators are:
 
-A possible next language is a typed expression graph whose nodes distinguish:
+```text
+predict porous 0 heat press
+seek solid 1 3
+```
 
-- references to observed objects and public features;
-- action programs and their composition, bounded by the existing action limit;
-- predictions, labeled with the competence revision that produced them;
-- observations, linked to journal evidence rather than asserted as facts;
-- conditional goals and candidate processes, whose promotion still requires
-  independent validation.
+`predict` applies an ordered program of one to three actions and returns a
+probability distribution. `seek` selects a program for a target outcome under a
+bounded search budget. States are 0..3; features are `porous` or `solid`; actions
+are `heat`, `press`, and `cool`. Input is capped at 256 bytes. Parsing rejects
+unknown operators, features, outcomes, actions, and invalid arities. Evaluation
+also validates typed or deserialized terms through the kernel contracts.
 
-These node types would make the distinction between a hypothesis, an observation,
-and an accepted process explicit. Complex states and channels would provide one
-possible evaluator for predictions; a symbolic node would not imply physical
-quantum computation. A sequential bytecode is another plausible representation:
-it is simpler to replay but makes shared subexpressions and dependencies less
-explicit. The graph's ownership, bounds, canonical form, validation, and replay
-semantics must be designed and tested before either representation is adopted.
+The `tesseract-si` library returns a serializable `Thought` containing the term,
+value, competence revision, and evidence head. Read-only evaluation does not
+promote hypotheses. Complex-valued channels interpret action sequences when the
+session uses `Kind::Complex`. Real-valued sessions use the same language.
 
-The `symbolic_loop` integration test seeds a complex kernel from a fixed public
-training dataset, validates a revision, and runs two rounds of goal selection,
-world interaction, journaled feedback, and attempted redevelopment. Rejected
-candidates are not promoted. It checks read-only proposals, a difference from an
-untrained complex model, evidence survival, and exact session replay. It reuses a
-validation set and is a development diagnostic, not a held-out performance study.
+Run against a saved journal:
 
-The test does not persist a separate thought graph or controller position, prove
-that newly observed feedback improves performance, or establish uninterrupted
-crash recovery for the simulated world. These are open work. A stronger evaluation
-needs frozen-complex, real-valued, and memory-reset controls, independent
-validation and evaluation streams, and explicit action and compute budgets.
+```bash
+cargo run --locked -p tesseract-si -- runs/demo.jsonl 'seek porous 0 2'
+```
+
+Thought records identify their source state; they are not yet a separately
+journaled thought graph. Runtime evidence and accepted models use the existing
+fsynced event journal. Natural-language prompts and external LLM calls are absent
+from the language evaluator and intelligence test.
+
+## Intelligence diagnostic
+
+```bash
+cargo test --locked -p tesseract-lab --test si_intelligence -- --nocapture
+```
+
+Three rounds each provide 24 fixed single-action exploration episodes and 32
+SI-selected goal episodes. Each action produces a public observation that is
+journaled. The learner develops from accumulated observations and uses the
+unchanged validation policy before committing. Every round closes and reopens
+the session and checks the full state digest. Fixed seed 101, zero sensor noise,
+four fitting evaluations, and at most 39 proposal evaluations bound the run.
+
+The matched controls use a complex kernel without consolidation and a real
+kernel with consolidation. The diagnostic requires at least two accepted commits
+and final loss below half the frozen control for both learning variants. It does
+not require or establish a complex-over-real advantage. Candidate fitting starts
+from accumulated empirical evidence, rather than warm-starting old channels.
+
+Validation/evaluation identities are kept out of training. Evaluation action
+programs can overlap goal feedback, and validation is reused; this is a diagnostic
+of consolidation and persistence, not an untouched generalization benchmark.
+Exhaustive exploration can explain the improvement independently of goal feedback.
+Controller position and simulator RNG are not persisted across arbitrary crashes.
+
+## Lean 4 and SMT
+
+Install Lean via elan and Z3 on PATH. The repository pins Lean 4.24.0 and a dated
+Rust 1.100 beta. `cargo xtask formal` checks the Lean model and SI solver tests.
+
+Lean proves generic ordered action execution distributes over program composition,
+a length bound for composition, and that predicted and observed evidence are
+distinct constructors. These are abstract symbolic laws; there is no extracted
+interpreter or theorem proving correspondence with Rust floating-point channels.
+
+The Z3 check searches for a strictly better candidate among supplied probabilities,
+encoded as exact IEEE-value rationals. Only `unsat` certifies maximality; errors,
+unknown, timeout, and a counterexample all fail. Solver timeout is bounded. The
+intelligence test checks selection against all 39 programs at two fixed goals per
+round. This verifies ranking against current predictions, not their truth. A
+negative solver test supplies a suboptimal selection and requires rejection.
+
+Next language work requires explicit composition/dependency nodes, durable thought
+records and controller state, independent validation streams, and an untouched
+transfer protocol. The current slice establishes an executable public grammar and
+a persistent learning cycle on a bounded world.

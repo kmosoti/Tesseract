@@ -14,8 +14,11 @@ concept-invention claim follows from these results.
 
 ## Run
 
-Install Rust with rustup; the repository pins Rust 1.99.1. Build and run from a
-Git checkout. Python 3 is needed only for knowledge checks and repository setup.
+Install Rust with rustup; the repository pins Rust 1.100 beta (dated 2026-10-18). Build and run from a
+Git checkout. Repository tooling uses Rust xtasks.
+
+Install Z3 on PATH before running tests. Install Lean via elan for
+`cargo xtask formal`; `lean-toolchain` selects Lean 4.24.0.
 
 ```bash
 cargo test --locked --workspace
