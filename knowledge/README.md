@@ -29,6 +29,7 @@ and `ratified_on`. Do not silently overturn a ratified decision.
 | [O-0009](observations/O-0009-working-nucleus.md) | Observation | false | Working abstractions and disagreement-driven experiments |
 | [O-0010](observations/O-0010-state-interview.md) | Observation | false | Read-only interview and evidence-driven state evolution |
 | [O-0011](observations/O-0011-scientific-reading.md) | Observation | false | Wikipedia reading, general questions, and retrieval failures |
+| [O-0012](observations/O-0012-symbolic-interpretation.md) | Observation | false | Source-grounded atoms, translation isolation, and conditional proofs |
 
 Each record distinguishes Observed, Inferred, Hypothesis, and Unknown; includes
 typed relative links in Relations; and states Revisit when. Keep useful backlinks.
