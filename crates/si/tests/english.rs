@@ -138,3 +138,56 @@ fn malformed_internal_values_do_not_produce_unbounded_or_forged_explanations() {
     thought.evidence_head = "a".repeat(10000);
     assert!(thought.to_english().is_err());
 }
+
+#[test]
+fn explanation_preserves_small_nonzero_uncertainty() {
+    let kernel = Kernel::new(Kind::Complex).unwrap();
+    let mut thought = Term::parse("predict porous 0 heat")
+        .unwrap()
+        .evaluate(&kernel, Budget::default())
+        .unwrap();
+    thought.value = tesseract_si::Value::Prediction(
+        tesseract_contracts::Prediction::new([0.99999, 0.00001, 0.0, 0.0], 0).unwrap(),
+    );
+    let english = thought.to_english().unwrap();
+    assert!(english.contains("state 0: greater than 99.99%"));
+    assert!(english.contains("state 1: less than 0.01%"));
+    thought.value = tesseract_si::Value::Prediction(
+        tesseract_contracts::Prediction::new([-1e-10, 1.0 + 1e-10, 0.0, 0.0], 0).unwrap(),
+    );
+    assert!(!thought.to_english().unwrap().contains("-0.00%"));
+}
+#[test]
+fn saved_state_commands_preserve_journal_and_legacy_json() {
+    let dir = tempfile::tempdir().unwrap();
+    let path = dir.path().join("journal.jsonl");
+    drop(tesseract_journal::Session::create(&path, Kind::Complex).unwrap());
+    let before = std::fs::read(&path).unwrap();
+    let binary = env!("CARGO_BIN_EXE_tesseract-si");
+    for args in [
+        vec![
+            "ask",
+            path.to_str().unwrap(),
+            "How can a porous object go from state 0 to state 2?",
+        ],
+        vec!["explain", path.to_str().unwrap(), "seek porous 0 2"],
+    ] {
+        let output = Command::new(binary).args(args).output().unwrap();
+        assert!(
+            output.status.success(),
+            "{}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        let text = String::from_utf8(output.stdout).unwrap();
+        assert!(text.contains("Suggested actions:"));
+        assert!(text.contains("Model revision 0"));
+    }
+    let output = Command::new(binary)
+        .args([path.to_str().unwrap(), "predict porous 0 heat"])
+        .output()
+        .unwrap();
+    assert!(output.status.success());
+    let thought: tesseract_si::Thought = serde_json::from_slice(&output.stdout).unwrap();
+    assert_eq!(thought.revision, 0);
+    assert_eq!(std::fs::read(path).unwrap(), before);
+}
