@@ -135,6 +135,10 @@ impl Term {
             query.validate()?;
         }
         let source = match self {
+            Self::Reason(query) => {
+                query.validate()?;
+                format!("reason {}", serde_json::to_string(query)?)
+            }
             Self::Recall(question) => {
                 tesseract_knowledge::validate_question(question)?;
                 format!("recall {}", serde_json::to_string(question)?)
@@ -173,6 +177,7 @@ impl Term {
     pub fn to_english(&self) -> Result<String> {
         self.to_source()?;
         Ok(match self {
+            Self::Reason(query) => tesseract_knowledge::symbolic::language::display_query(query),
             Self::Recall(question) => question.clone(),
             Self::Concepts => "What concepts have you formed?".into(),
             Self::Wonder => "What should you investigate next?".into(),

@@ -1,5 +1,6 @@
 use serde_json::{Value, json};
 mod reading;
+mod symbolic;
 mod wikipedia;
 use std::{
     collections::{BTreeMap, BTreeSet},
@@ -343,6 +344,7 @@ fn main() -> Result {
         Some("wikipedia") => wikipedia::import(&args[1..]),
         Some("wikipedia-verify") => wikipedia::verify(&args[1..]),
         Some("reading-interview") => reading::interview(&args[1..]),
+        Some("symbolic-interview") => symbolic::interview(&args[1..]),
         Some("knowledge")=>knowledge(), Some("configure-github")=>configure(), Some("issues")=>issues(), Some("reproduce")=>reproduce(&args[1..]),
         Some("formal")=>{let lean=std::env::var("LEAN").unwrap_or_else(|_|"lean".into()); print!("{}",run(Command::new(lean).arg("formal/SI.lean"))?); print!("{}",run(Command::new("cargo").args(["test","--locked","-p","tesseract-si"]))?); Ok(())},
         _=>Err("usage: cargo xtask knowledge|formal|configure-github|issues|reproduce RECEIPT [BINARY] [SOURCE_DIR]".into())

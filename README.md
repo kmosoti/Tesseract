@@ -52,8 +52,9 @@ cargo run --locked -p tesseract-si -- ask-knowledge runs/quantum-reading.json 'W
 ```
 
 The [scientific reader](docs/scientific-reading.md) stores source revisions and
-retrieves cited excerpts offline. This is declarative reading memory; it does not
-demonstrate scientific reasoning or validate the imported claims. Wikipedia data
+a rough symbolic interpretation. Supported question forms return compact claims
+and bounded proof steps; `inspect-symbols MEMORY` exposes the representation.
+Interpretation is partial and does not validate imported science. Wikipedia data
 has a [separate CC BY-SA license](data/quantum-mechanics/NOTICE).
 
 ## What this tests

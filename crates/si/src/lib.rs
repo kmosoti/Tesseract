@@ -14,6 +14,7 @@ pub enum Term {
     Wonder,
     /// Open-text question over explicitly supplied scientific reading memory.
     Recall(String),
+    Reason(tesseract_knowledge::symbolic::Query),
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum Value {
@@ -38,6 +39,13 @@ impl Term {
     /// Canonical surface syntax has no free-form instructions or implicit context.
     /// `predict porous 0 heat press` or `seek solid 1 3`.
     pub fn parse(source: &str) -> Result<Self> {
+        if source.len() <= 16384
+            && let Some(query) = source.trim().strip_prefix("reason ")
+        {
+            let query: tesseract_knowledge::symbolic::Query = serde_json::from_str(query)?;
+            query.validate()?;
+            return Ok(Self::Reason(query));
+        }
         if source.len() <= 8192
             && let Some(question) = source.trim().strip_prefix("recall ")
         {
@@ -105,7 +113,7 @@ impl Term {
     pub fn evaluate(&self, kernel: &Kernel, budget: Budget) -> Result<Thought> {
         budget.validate()?;
         let value = match self {
-            Self::Recall(_) => {
+            Self::Recall(_) | Self::Reason(_) => {
                 return Err(Error::Invalid(
                     "recall requires reading memory, not a workshop kernel".into(),
                 ));
@@ -144,6 +152,17 @@ impl Term {
             term: self.clone(),
             answer: memory.ask(question)?,
         })
+    }
+    pub fn evaluate_symbolic(
+        &self,
+        memory: &tesseract_knowledge::KnowledgeBase,
+    ) -> Result<tesseract_knowledge::symbolic::Understanding> {
+        let Self::Reason(query) = self else {
+            return Err(Error::Invalid(
+                "symbolic interpretation requires a reason term".into(),
+            ));
+        };
+        memory.interpretation()?.evaluate(query)
     }
 }
 
