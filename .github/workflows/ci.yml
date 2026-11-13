@@ -23,6 +23,8 @@ jobs:
       - run: cargo fmt --all --check
       - run: cargo clippy --locked --workspace --all-targets -- -D warnings
       - run: cargo test --locked --workspace
+      - name: Report fixed-proposer plastic-symbol benchmark
+        run: cargo test --locked -p tesseract-lab --test plastic_symbols -- --nocapture
       - run: cargo xtask knowledge
       - run: cargo build --locked --release --workspace
       - name: Run diagnostic comparison
