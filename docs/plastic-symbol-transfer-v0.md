@@ -26,9 +26,11 @@ given the generator's rule identity.
 - Public context includes a family ID (0–3) and a mode bit (0–1). An unrelated
   object identity is never passed to the learners. The candidate meaning changes
   by family, by mode within one family, and through a late drift in another.
-- Prespecified phases per seed: 360 warmup observations, 480 transfer
-  observations with new task/device identities, 240 out-of-candidate observations
-  for family 3, and 480 drift observations.
+- Prespecified phases per seed: 360 warmup observations, 480 continuation
+  observations from previously seen family/mode contexts (called 'transfer' in
+  the output for compatibility), 240 out-of-candidate observations for family 3,
+  and 480 drift observations. The continuation phase does NOT evaluate transfer
+  to unseen domains or model explicit device identities.
 - Final 100 seeds are 1000–1099. Smoke seeds 0–9 were inspected before the final
   comparison. Report all seeds. No final-seed tuning is permitted.
 
@@ -66,7 +68,7 @@ Report per-phase mean Brier scores, a seed-paired 10,000-resample percentile
 minted splits, and spurious splits in the unsupported family.
 
 A positive relative gain against retrieval is evidence for this narrow,
-candidate-covered, synthetic online-learning mechanism. It is **not**
+candidate-covered, synthetic online-learning mechanism on familiar contexts. It is **not**
 evidence for LLM replacement, superiority over well-specified online Bayesian
 learning, independently invented programs, or open-ended concept genesis.
 
