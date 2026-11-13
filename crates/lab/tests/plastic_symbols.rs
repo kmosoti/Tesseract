@@ -289,11 +289,7 @@ fn run_seed(seed: u32) -> SeedResult {
         for i in 0..length {
             let family_id = if phase == 2 { 3 } else { i % 3 };
             let mode = (i / 3 + rng.int(2)) % 2;
-            let x = [
-                rng.int(12) as i32,
-                rng.int(12) as i32,
-                rng.int(12) as i32,
-            ];
+            let x = [rng.int(12) as i32, rng.int(12) as i32, rng.int(12) as i32];
             let chosen = if family_id == 3 {
                 3
             } else {
@@ -346,8 +342,11 @@ fn benchmark() -> serde_json::Value {
     for (phase, name) in PHASES.iter().enumerate() {
         let mut methods = serde_json::Map::new();
         for (idx, method) in METHODS.iter().enumerate() {
-            let mean =
-                seeds.iter().map(|seed| seed.losses[phase][idx]).sum::<f64>() / seeds.len() as f64;
+            let mean = seeds
+                .iter()
+                .map(|seed| seed.losses[phase][idx])
+                .sum::<f64>()
+                / seeds.len() as f64;
             methods.insert((*method).to_string(), serde_json::json!(mean));
         }
         phases.insert((*name).to_string(), serde_json::Value::Object(methods));
@@ -368,8 +367,7 @@ fn benchmark() -> serde_json::Value {
     relative_gains.sort_by(f64::total_cmp);
 
     let false_splits = seeds.iter().filter(|seed| seed.split[3]).count();
-    let mean_mints = seeds.iter().map(|seed| seed.minted as f64).sum::<f64>()
-        / seeds.len() as f64;
+    let mean_mints = seeds.iter().map(|seed| seed.minted as f64).sum::<f64>() / seeds.len() as f64;
 
     serde_json::json!({
         "kind": "synthetic_fixed_candidate_proposer_not_llm",
